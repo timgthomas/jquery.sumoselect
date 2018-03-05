@@ -160,7 +160,10 @@
 
                     li.data('opt', opt);    // store a direct reference to option.
                     opt.data('li', li);    // store a direct reference to list item.
-                    if (O.is_multi) li.prepend('<span><i></i></span>');
+                    if (O.is_multi) {
+                      li.prepend('<span><i></i></span>');
+                      li.append('<span class="only">Only</span>');
+                    }
 
                     if (opt[0].disabled || d)
                         li = li.addClass('disabled');
@@ -432,6 +435,12 @@
                         evt.stopPropagation();
                     });
 
+                    O.select.find('.only').on('click', function (evt) {
+                        var selOpt = $(this).closest('li').data('opt')[0].value;
+                        O.toggSelOne(selOpt);
+                        evt.stopPropagation();
+                    });
+
                     O.select.on('keydown.sumo', function (e) {
                         switch (e.which) {
                             case 38: // up
@@ -678,6 +687,17 @@
                         O.setText();
                         O.setPstate();
                     }
+                },
+
+                toggSelOne: function (c) {
+                    var O = this;
+                    O.E.find('option:not(:disabled,:hidden)')
+                        .each(function (ix, e) {
+                            var $e = $(e);
+                            if (($e.val() === c && !e.selected) || ($e.val() !== c && e.selected)) {
+                                $(e).data('li').trigger('click');
+                            }
+                        });
                 },
 
                 /* outside accessibility options
