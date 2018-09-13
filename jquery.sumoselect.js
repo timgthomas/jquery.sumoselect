@@ -156,7 +156,7 @@
                     var O = this;
 
                     if (!opt.attr('value')) opt.attr('value', opt.val());
-                    var li = $('<li class="opt"><label>' + opt.text() + '</label></li>');
+                    var li = $('<li class="opt"><label>' + opt.html() + '</label></li>');
 
                     li.data('opt', opt);    // store a direct reference to option.
                     opt.data('li', li);    // store a direct reference to list item.
@@ -534,7 +534,12 @@
 
                                 break;
                             }
-                            else O.placeholder += $(sels[i]).text() + ", ";
+                            else if ($(sels[i]).hasClass('subtext')) {
+                              O.placeholder += $(sels[i]).find('.label').text() + ", ";
+                            }
+                            else {
+                              O.placeholder += $(sels[i]).text() + ", ";
+                            }
                         }
                         O.placeholder = O.placeholder.replace(/,([^,]*)$/, '$1'); //remove unexpected "," from last.
                     }
